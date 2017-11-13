@@ -1,0 +1,180 @@
+swagger: '2.0'
+info:
+  description: Service for reading from and writing in S3
+  version: 1.0.0
+  title: S3 Service
+  contact:
+    email: ahadcse@gmail.com
+host: sample-domain.com
+basePath: "/s3op"
+schemes:
+- https
+paths:
+  "/readfile/{formId}":
+    get:
+      summary: 'Get S3 Info'
+      produces:
+      - "application/json"
+      parameters:
+      - name: formId
+        description: S3 file name
+        in: path
+        required: true
+        type: string
+      - name: lang
+        description: language
+        in: query
+        required: false
+        type: string
+      responses:
+        200:
+          description: "200 response"
+          schema:
+            $ref: "#/definitions/Response"
+        400:
+          description: "400 response"
+          schema:
+            $ref: "#/definitions/ErrorMessage"
+      security:
+      - api_key: []
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: "200"
+        uri: arn:aws:apigateway:eu-west-1:lambda:path/functions/lambda:s3-read-api/invocations
+        passthroughBehavior: when_no_match
+        httpMethod: POST
+        type: aws_proxy
+    options:
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "200 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+            Access-Control-Allow-Methods:
+              type: "string"
+            Access-Control-Allow-Headers:
+              type: "string"
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Methods: "'*'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-TypeAuthorization,api-key'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+            responseTemplates:
+              application/json: "{}"
+        requestTemplates:
+          application/json: "{  \"statusCode\" : 200 }"
+        passthroughBehavior: "when_no_match"
+        type: "mock"
+
+  "/writefile/events":
+    post:
+      summary: 'Puts feedback/s into S3'
+      produces:
+        - application/json
+      parameters:
+        - name: x-api-key
+          description: API access key
+          in: header
+          required: true
+          type: string
+        - name: body
+          in: body
+          description: Payload as array of json objects
+          required: true
+          schema:
+            $ref: '#/definitions/RequestBody'
+      responses:
+        '200':
+          description: 200 response
+          schema:
+            $ref: '#/definitions/APIResponse'
+          headers:
+            Access-Control-Expose-Headers:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Headers:
+              type: string
+        '400':
+          description: 400 response
+          schema:
+            $ref: '#/definitions/ErrorMessage'
+          headers:
+            Access-Control-Expose-Headers:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Headers:
+              type: string
+        '500':
+          description: 500 response
+          headers:
+            Access-Control-Expose-Headers:
+              type: string
+            Access-Control-Allow-Origin:
+              type: string
+            Access-Control-Allow-Methods:
+              type: string
+            Access-Control-Allow-Headers:
+              type: string
+      security:
+      - api_key: []
+      x-amazon-apigateway-integration:
+        responses:
+          '4\d{2}':
+            statusCode: '400'
+            responseParameters:
+              method.response.header.Access-Control-Expose-Headers: '''Date'''
+              method.response.header.Access-Control-Allow-Methods: '''*'''
+              method.response.header.Access-Control-Allow-Headers: '''Content-Type, Authorization, api-key'''
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+          default:
+            statusCode: '200'
+            responseParameters:
+              method.response.header.Access-Control-Expose-Headers: '''Date'''
+              method.response.header.Access-Control-Allow-Methods: '''*'''
+              method.response.header.Access-Control-Allow-Headers: '''Content-Type,Authorization,api-key'''
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+          '5\d{2}':
+            statusCode: '500'
+            responseParameters:
+              method.response.header.Access-Control-Expose-Headers: '''Date'''
+              method.response.header.Access-Control-Allow-Methods: '''*'''
+              method.response.header.Access-Control-Allow-Headers: '''Content-Type,Authorization,api-key'''
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+        uri: arn:aws:apigateway:eu-west-1:lambda:path_for_lambda/functions/lambda:s3-write-api/invocations
+        passthroughBehavior: when_no_match
+        httpMethod: POST
+        type: aws_proxy
+
+securityDefinitions:
+  api_key:
+    type: apiKey
+    name: api-key
+    in: header
+definitions:
+  Response:
+    type: "object"
+    properties: {}
+  RequestBody:
+    type: string
+  APIResponse:
+    type: object
+  ErrorMessage:
+    type: "object"
+    properties:
+      rootCause:
+        type: "string"
