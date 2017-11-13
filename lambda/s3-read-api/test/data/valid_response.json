@@ -1,0 +1,10 @@
+{
+  "body": "{\r\n    \"formId\": \"form1\",\r\n    \"result\": [\r\n        {\r\n            \"att1\": \"att1\",\r\n            \"val1\": \"1\"\r\n        },\r\n        {\r\n            \"att2\": \"att2\",\r\n            \"val2\": \"2\"\r\n        },\r\n        {\r\n            \"att3\": \"att3\",\r\n            \"val3\": \"3\"\r\n        }\r\n    ],\r\n    \"submittedTime\": \"2015-08-09T21:19+02:00\"\r\n}",
+  "headers": {
+    "Content-type": "application/json",
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "*",
+    "Access-Control-Allow-Headers": "Content-Type,Authorization,api-Key,channel-name,request-token"
+  },
+  "statusCode": 200
+}
