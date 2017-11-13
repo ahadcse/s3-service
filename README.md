@@ -1,9 +1,9 @@
 # s3-service
 A sample Node.js implementation repo for working with AWS S3 
 # Sample request for reading from S3
-URL: https://sample-domain.com/readfile/{formId}
+URL: https://sample-domain.com/s3op/readfile/{formId}
 # Sample request for writing in S3
-  URL: https://sample-domain.com/writefile/event
+  URL: https://sample-domain.com/s3op/writefile/event
   # Send the body in json array format
 [{
     "formId": "form1",
