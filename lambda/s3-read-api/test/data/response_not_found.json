@@ -1,0 +1,10 @@
+{
+  "body": "{\"error\":\"The specified key does not exist.\"}",
+  "headers": {
+    "Content-type": "application/json",
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "*",
+    "Access-Control-Allow-Headers": "Content-Type, authorization-token,api-key,request-token"
+  },
+  "statusCode": 404
+}
